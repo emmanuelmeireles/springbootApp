@@ -13,12 +13,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Client {
+public class UserModel {
     
     @Id
     @GeneratedValue
     long id;
-    String nome;
-    String email;
+    String username;
+    String password;
+    int age;
 
 }
