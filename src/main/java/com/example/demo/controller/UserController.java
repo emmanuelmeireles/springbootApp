@@ -29,50 +29,36 @@ public class UserController {
     @Autowired
     UserService userService;
 
-    @DeleteMapping("/deleteUser/{id}")
-    public void deleteUserById(@PathVariable long id){
-        userService.deleteUser(id);
-    } 
-
-    @DeleteMapping("/deleteUser")
-    public void deleteUser(@RequestBody UserModel entity){
-        userService.deleteUser(entity.getId());
-    }
-    
-    @PutMapping("/updateUser/{id}")
-    public UserModel putMethodNameById(@PathVariable long id, @RequestBody UserModel entity) {
-        return userService.updateUser(id, entity);
+    @PostMapping
+    public UserModel addNewUser(@RequestBody UserModel user) {
+        return userService.createUser(user);
     }
 
-    @PutMapping("/updateUser")
-    public UserModel putMethodName(@RequestBody UserModel entity) {
-        return userService.updateUser(entity.getId(), entity);
-    }
-
-    @PostMapping("/newUser")
-    public UserModel addNewUser(@RequestBody UserModel entity) {        
-        return userService.createUser(entity);
-    }
-    
-    @GetMapping("/getUsers/{id}")
-    public UserModel getUserById(@PathVariable long id) {
-        UserModel client = userService.getUserById(id);
-        return client;
-    }
-
-    @GetMapping("/getAllUsers")
+    @GetMapping
     public List<UserModel> getAllUsers() {
-        List<UserModel> client = userService.getAllUsers();
-        return client;
-    } 
-
-    @PostMapping("/statusOK")
-    public ResponseEntity<String> returnStatus(@RequestBody UserModel entity) {
-        return new ResponseEntity<>(HttpStatus.OK);
+        return userService.getAllUsers();
     }
 
-    @GetMapping("/hello")
-    public String helloString() {
-        return "Hello World";
+    @GetMapping("/{id}")
+    public ResponseEntity<UserModel> getUserById(@PathVariable long id) {
+        UserModel user = userService.getUserById(id);
+        return user != null ? ResponseEntity.ok(user) : ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserModel> updateUser(@PathVariable long id, @RequestBody UserModel user) {
+        UserModel updatedUser = userService.updateUser(id, user);
+        return updatedUser != null ? ResponseEntity.ok(updatedUser) : ResponseEntity.notFound().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteUserById(@PathVariable long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.noContent().build();
+    }
+    
+    @GetMapping("/status")
+    public ResponseEntity<String> returnStatus() {
+        return ResponseEntity.ok("serviço ativo e funcionando");
     }
 }
